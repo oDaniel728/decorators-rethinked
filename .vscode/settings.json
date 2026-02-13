@@ -1,5 +1,5 @@
 {
     "python.analysis.diagnosticSeverityOverrides": {
-        "reportUnusedExpression": "none"
+        "reportUnusedExpression": "none" // disable unused variable warnings(for variable decorators)
     }
 }
