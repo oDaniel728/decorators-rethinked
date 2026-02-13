@@ -98,6 +98,9 @@ def compose[**P, R](self: Iterable[Callable[P, R]]) -> Callable[P, list[R]]:
     return out
 
 def foreach[T](fn: Callable[[T, int], Any]):
+    # [1, 2, 3] @foreach(lambda v, i: print(v, end=' ')) # 1 2 3
+    # for i, v in enumerate([1, 2, 3]): 
+    #   print(v, end=' ')
     @decorator
     def wrapper(self: Iterable[T]):
         for i, v in enumerate(self):
@@ -105,6 +108,9 @@ def foreach[T](fn: Callable[[T, int], Any]):
     return wrapper
 
 def choose[T, U](i: U, default: T) -> decorator[[Iterable[tuple[T, U]]], T]:
+    # [('one', 1), ('two', 2), ('three', 3)] @choose(2, 'default') # 'two'
+    # for v, k in [('one', 1), ('two', 2), ('three', 3)]:
+    #   if k == 2: return v
     @decorator
     def wrapper(self: Iterable[tuple[T, U]]) -> T:
         for v, k in self:
@@ -112,8 +118,16 @@ def choose[T, U](i: U, default: T) -> decorator[[Iterable[tuple[T, U]]], T]:
         return default
     return wrapper
 
+def eval[T, U](fn: Callable[[T], U]):
+    @decorator
+    def wrapper(self: T) -> U:
+        return fn(self)
+    return wrapper
+
 @decorator
 def encapsulate[T](self: T) -> Callable[[], T]:
+    # (T) value @encapsulate -> [() -> T]
+    # def f(): return value
     return lambda: self
 
 main = (
@@ -126,7 +140,11 @@ main = (
                 ('terça', 3), 
                 ('quarta', 4), 
                 ('quinta', 5)
-            ] @choose(I, n),
+            ] @choose(I, n) 
+            @eval(
+                lambda v: 
+                    (v @cast(str)).capitalize()
+            ),
             f"Olá pela {n} vez!" @say,
             None @ret
         )
