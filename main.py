@@ -149,7 +149,7 @@ main = ((
                         (v @cast(str)).capitalize() # capitaliza ('primeira' -> 'Primeira')
                 ),
                 f"Olá pela {n} vez!" @say, # printa "Olá pela Primeiraº vez!"
-                None @ret
+                None @ret # retorna None
             )
         ] @compose # transforma em função; e roda por causa do @foreach
     ) @encapsulate # encapsula a funcao (... -> def (): ...)
