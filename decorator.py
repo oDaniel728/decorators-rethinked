@@ -11,3 +11,5 @@ class decorator(Generic[P, R]):
     
     def __rmatmul__(self, *args: P.args, **kwargs: P.kwargs) -> R:
         return self.__wrapper(*args, **kwargs)
+
+__all__ = ['decorator']

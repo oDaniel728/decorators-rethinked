@@ -2,7 +2,7 @@ import builtins
 from typing import Any, Iterable, Literal, Type, TypeGuard, TypedDict
 import typing
 
-from decorators import decorator, Callable
+from decorator import decorator, Callable
 
 @decorator
 def say(self: str) -> None: # prints itself
