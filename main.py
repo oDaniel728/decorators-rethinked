@@ -130,26 +130,30 @@ def encapsulate[T](self: T) -> Callable[[], T]:
     # def f(): return value
     return lambda: self
 
-main = (
-    range(1,11) @foreach([
-        lambda I, i: (
-            n:=f'{I}º',
-            n:=[
-                ('primeira', 1), 
-                ('segunda', 2), 
-                ('terça', 3), 
-                ('quarta', 4), 
-                ('quinta', 5)
-            ] @choose(I, n) 
-            @eval(
-                lambda v: 
-                    (v @cast(str)).capitalize()
-            ),
-            f"Olá pela {n} vez!" @say,
-            None @ret
-        )
-    ] @compose)
-    @cast(None)
-    @encapsulate
-) @secure @encapsulate
-main @onlyif(__name__ == "__main__")
+
+# de um até dez, fica printando
+main = ((
+    range(1,11) @foreach( # de 1 a 10 ele roda:
+        [
+            lambda v, i: ( # v: item, i: índice
+                n:=f'{v}º', # vira nº (1º)
+                n:=[
+                    ('primeira', 1), 
+                    ('segunda', 2), 
+                    ('terceira', 3), 
+                    ('quarta', 4), 
+                    ('quinta', 5)
+                ] @choose(v, n) # se I for 1, 2, 3, 4, 5, vira primeira, segunda, ...
+                @eval(
+                    lambda v: 
+                        (v @cast(str)).capitalize() # capitaliza ('primeira' -> 'Primeira')
+                ),
+                f"Olá pela {n} vez!" @say, # printa "Olá pela Primeiraº vez!"
+                None @ret
+            )
+        ] @compose # transforma em função; e roda por causa do @foreach
+    ) @encapsulate # encapsula a funcao (... -> def (): ...)
+)   @secure # desencapsula vê se é segura
+    @encapsulate # encapsula denovo
+)
+main @onlyif(__name__ == "__main__") # roda somente se o script for principal
